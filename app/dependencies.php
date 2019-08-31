@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use App\Domain\User\UserRepositoryInterface;
+use App\Infrastructure\Persistence\User\UserRepository;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -23,24 +25,15 @@ return function (ContainerBuilder $containerBuilder) {
             
             return $logger;
         },
-        'db1' => function (ContainerInterface $c) {
-            $db1Settings = $c->get('settings')['db1'];
-            $pdo = new PDO('mysql:host=' . $db1Settings['host'] . ';dbname=' . $db1Settings['dbname'],
-                $db1Settings['user'], $db1Settings['pass']);
+        PDO::class => function (ContainerInterface $c) {
+            $dbSettings = $c->get('settings')['db'];
+            $pdo = new PDO('mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
+                $dbSettings['user'], $dbSettings['pass']);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             return $pdo;
         },
-        'db2' => function (ContainerInterface $c) {
-            $db2Settings = $c->get('settings')['db2'];
-            $pdo = new PDO('mysql:host=' . $db2Settings['host'] . ';dbname=' . $db2Settings['dbname'],
-                $db2Settings['user'], $db2Settings['pass']);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            return $pdo;
-        },
-    
+
     ]);
 };

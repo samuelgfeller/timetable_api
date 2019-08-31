@@ -1,4 +1,7 @@
 <?php
+ini_set('xdebug.var_display_max_depth', '10');
+ini_set('xdebug.var_display_max_children', '256');
+ini_set('xdebug.var_display_max_data', '1024');
 
 use App\Controllers\Locations\LocationController;
 use DI\Container;
@@ -11,7 +14,7 @@ use Slim\Handlers\Strategies\RequestHandler;
 use Slim\Routing\RouteCollectorProxy;
 use DI\ContainerBuilder;
 
-require $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /*
  * Instantiate App
@@ -26,6 +29,10 @@ $settings($containerBuilder);
 // Set up dependencies
 $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
+
+// Set up repositories
+$repositories = require __DIR__ . '/../app/repositories.php';
+$repositories($containerBuilder);
 
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();

@@ -5,47 +5,48 @@ namespace App\Infrastructure\Persistence\User;
 
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepositoryInterface;
+use App\Infrastructure\Persistence\DataManager;
 use User;
 
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository extends DataManager implements UserRepositoryInterface
 {
-    /**
-     * @var User[]
-     */
-    private $users;
 
     /**
-     * UserRepositoryInterface constructor.
-     *
-     * @param array|null $users
+     * {@inheritdoc}
      */
-    public function __construct(array $users = null)
+    public function findAllUsers(): array
     {
-    
+        return $this->selectAndFetchAssocMultipleData('SELECT * FROM user;');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findAll(): array
+    public function findUserById(int $id): User
     {
-        return DataManager::selectAndFetchAssocMultipleData('SELECT x,y,date FROM location;');
+        return $this->selectAndFetchSingleData('select * from user where and id = '.$id.';');
     }
-    
-    public function insert(\Location $location)
+
+    public function getUserById(int $id): User
     {
-        return DataManager::insert('location',PopulateArray::populateLocationArray($location));
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function findUserOfId(int $id): User
-    {
+        $users = ['test' => 'test'];
         if (!isset($this->users[$id])) {
             throw new UserNotFoundException();
         }
 
-        return $this->users[$id];
+        return $users[$id];
+    }
+
+    public function insertUser(array $data): int {
+        // TODO: Implement insertUser() method.
+    }
+
+    public function deleteUser(int $userId): bool {
+        // TODO: Implement deleteUser() method.
+    }
+
+    public function updateUser(int $userId, array $data): bool {
+        // TODO: Implement updateUser() method.
     }
 }

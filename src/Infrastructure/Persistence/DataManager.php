@@ -1,9 +1,16 @@
 <?php
+namespace App\Infrastructure\Persistence;
 
-require_once __DIR__ . '/../PdoConnection.php';
+use PDO;
 
-class DataManager {
-	
+abstract class DataManager {
+
+    protected $pdo;
+
+    public function __construct(PDO $pdo) {
+        $this->pdo = $pdo;
+    }
+
 	/**
 	 * Insert data in database
 	 *
@@ -11,8 +18,8 @@ class DataManager {
 	 * @param array $data assoc array. Key has to be the table name and value its value
 	 * @return bool|string
 	 */
-	public static function insert($table, $data) {
-		if ($conn = PdoConnection::instance()) {
+	public function insert($table, $data) {
+		if ($conn = $this->pdo) {
 			$query = 'INSERT INTO ' . $table . ' (' . implode(', ', array_keys($data)) . ')
         VALUES (:' . implode(', :', array_keys($data)) . ');';
 			$stmt = $conn->prepare($query);
@@ -21,7 +28,7 @@ class DataManager {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Run a query for example update or delete
 	 *
@@ -29,15 +36,15 @@ class DataManager {
 	 * @param array $args
 	 * @return PDO|bool
 	 */
-	public static function run(string $query, array $args = []) {
-		if ($conn = PdoConnection::instance()) {
+	public function run(string $query, array $args = []) {
+		if ($conn = $this->pdo) {
 			$stmt = $conn->prepare($query);
 			$stmt->execute($args);
 			return $conn;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Select multiple data from database and return them as an associative array
 	 *
@@ -45,15 +52,15 @@ class DataManager {
 	 * @param array $args arguments (? in query)
 	 * @return array|bool
 	 */
-	public static function selectAndFetchAssocMultipleData(string $query, array $args = []) {
-		if ($conn = PdoConnection::instance()) {
+	public function selectAndFetchAssocMultipleData(string $query, array $args = []) {
+		if ($conn = $this->pdo) {
 			$stmt = $conn->prepare($query);
 			$stmt->execute($args);
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Select single data from database and return it as an assoc array which is the value
 	 *
@@ -61,13 +68,13 @@ class DataManager {
 	 * @param array $args
 	 * @return bool|mixed
 	 */
-	public static function selectAndFetchSingleData(string $query, array $args = []) {
-		if ($conn = PdoConnection::instance()) {
+	public function selectAndFetchSingleData(string $query, array $args = []) {
+		if ($conn = $this->pdo) {
 			$stmt = $conn->prepare($query);
 			$stmt->execute($args);
 			return $stmt->fetch();
 		}
 		return false;
 	}
-    
+
 }
