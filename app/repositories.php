@@ -14,5 +14,4 @@ return function (ContainerBuilder $containerBuilder) {
             return new UserRepository($pdo);
         },
     ]);
-
 };

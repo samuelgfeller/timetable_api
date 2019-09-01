@@ -4,3 +4,4 @@
 /logs/*
 /var/cache/*
 /composer.lock
+/.gtm/

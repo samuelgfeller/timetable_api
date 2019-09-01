@@ -4,19 +4,18 @@ namespace App\Controllers\Locations;
 
 use App\Application\Controllers\Controller;
 use App\Domain\User\UserRepositoryInterface;
+use App\Domain\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 
 class UserController extends Controller {
-    /**
-     * @var UserRepositoryInterface
-     */
-    protected $userRepositoryInterface;
 
-    public function __construct(LoggerInterface $logger, UserRepositoryInterface $userRepositoryInterface) {
+    protected $userService;
+
+    public function __construct(LoggerInterface $logger, UserService $userService) {
         parent::__construct($logger);
-        $this->userRepositoryInterface = $userRepositoryInterface;
+        $this->userService = $userService;
     }
 
     public function get(Request $request, Response $response, array $args) {
@@ -44,12 +43,11 @@ class UserController extends Controller {
     }
 
     public function list(Request $request, Response $response, array $args) {
-        $allUsers = $this->userRepositoryInterface->findAllUsers();
+        $allUsers = $this->userService->findAllUsers();
 
         //somehow that doesnt work
 //        $this->respondWithData($response, $allUsers);
         //    $this->respondWithDataPrettyJson($response, $allUsers);
-
 
         // This works though
          $response->getBody()->write(json_encode($allUsers));
