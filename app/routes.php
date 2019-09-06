@@ -1,7 +1,7 @@
 <?php
 
 use App\Controllers\Locations\LocationController\LocationController;
-use App\Controllers\Locations\UserController;
+use App\Controllers\Users\UserController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;

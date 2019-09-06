@@ -28,7 +28,7 @@ return function (ContainerBuilder $containerBuilder) {
             return $logger;
         },
         Connection::class => function (ContainerInterface $c) {
-            $settings = $c->get('settings')['db1'];
+            $settings = $c->get('settings')['db'];
             $driver = new Mysql($settings);
             return new Connection(['driver' => $driver]);
         },

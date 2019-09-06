@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Locations;
+namespace App\Controllers\Users;
 
 use App\Application\Controllers\Controller;
 use App\Domain\User\UserRepositoryInterface;
