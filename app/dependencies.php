@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+use Cake\Database\Connection;
+use Cake\Database\Driver\Mysql;
+use DI\Container;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -24,15 +27,15 @@ return function (ContainerBuilder $containerBuilder) {
         
             return $logger;
         },
-        PDO::class => function (ContainerInterface $c) {
-            $dbSettings = $c->get('settings')['db'];
-            $dsn = 'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'];
-            $options = [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ];
-            return new PDO($dsn, $dbSettings['user'], $dbSettings['pass'], $options);
+        Connection::class => function (ContainerInterface $c) {
+            $settings = $c->get('settings')['db1'];
+            $driver = new Mysql($settings);
+            return new Connection(['driver' => $driver]);
         },
+        PDO::class => function (ContainerInterface $c){
+            $connection = $c->get(Connection::class);
+            $connection->getDriver()->connect();
+            return $connection->getDriver()->getConnection();
+        }
     ]);
 };

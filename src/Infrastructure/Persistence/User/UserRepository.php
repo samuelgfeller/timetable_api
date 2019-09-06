@@ -6,18 +6,20 @@ namespace App\Infrastructure\Persistence\User;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepositoryInterface;
 use App\Infrastructure\Persistence\DataManager;
+use Cake\Database\Connection;
 use User;
 
 
 class UserRepository extends DataManager implements UserRepositoryInterface
 {
 
+    private $table = 'user';
     /**
      * {@inheritdoc}
      */
     public function findAllUsers(): array
     {
-        return $this->selectAndFetchAssocMultipleData('SELECT * FROM user;');
+        return $this->findAll($this->table);
     }
 
     /**

@@ -54,6 +54,4 @@ class UserController extends Controller {
         return $response->withHeader('Content-Type', 'application/json');
 
     }
-
-
 }
